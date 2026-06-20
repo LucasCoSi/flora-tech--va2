@@ -1,216 +1,336 @@
-# 🌱 FloraTech API — Monitoramento de Estufas Hidropônicas
+# FloraTech - Monitoramento de Estufas Hidroponicas
 
-> API RESTful desenvolvida com **NestJS**, **TypeORM** e **SQLite** seguindo os princípios da **Arquitetura Hexagonal (Ports & Adapters)**.
+Aplicacao full stack em monorepo para gerenciamento de estufas hidroponicas e ciclos de cultivo. O projeto foi desenvolvido para a atividade avaliativa da 2VA de Programacao Web I, integrando backend NestJS, autenticacao JWT e frontend Angular 20.
 
----
+## Integrantes
 
-## 👥 Dupla
+| Nome | Responsabilidades principais |
+| --- | --- |
+| Marcelo Henrique | CRUD de Estufas, regras de negocio, backend e testes |
+| Lucas Costa | CRUD de Ciclos de Cultivo, frontend, autenticacao e integracao |
 
-| Nome             | Responsabilidade                                                           |
-| ---------------- | -------------------------------------------------------------------------- |
-| Marcelo Henrique | Entidade Estufa — domain, service, controller, dto, testes unitários       |
-| Lucas Costa      | Entidade CicloCultivo — domain, service, controller, dto, testes unitários |
+## Tema
 
----
+Monitoramento de Estufas Hidroponicas.
 
-## 🎯 Tema
+O sistema permite cadastrar e administrar estufas, registrar ciclos de cultivo vinculados a cada estufa, controlar usuarios pendentes de ativacao e demonstrar mensagens de erro retornadas pelo backend diretamente na interface.
 
-**Monitoramento de Estufas Hidropônicas**
+## Estrutura do Monorepo
 
-O sistema permite o gerenciamento completo de estufas e seus ciclos de cultivo, com validações robustas de negócio, relacionamento 1:N entre entidades e documentação automática via Swagger.
+```text
+flora-tech-master/
+|-- apps/
+|   |-- backend/      # API NestJS 11, TypeORM, JWT e Swagger
+|   `-- frontend/     # Angular 20 standalone, TailwindCSS e HttpClient
+|-- packages/
+|   |-- utils/        # Tipos compartilhados entre frontend e backend
+|   |-- eslint-config/
+|   `-- typescript-config/
+|-- specs/
+|-- .agents/
+|-- .env.example
+|-- package.json
+|-- pnpm-workspace.yaml
+|-- turbo.json
+`-- README.md
+```
 
----
+## Tecnologias
 
-## 🚀 Como Rodar o Projeto
+| Camada | Tecnologias |
+| --- | --- |
+| Monorepo | pnpm workspaces, Turborepo |
+| Backend | NestJS 11, TypeORM, SQL.js/SQLite, Passport JWT, bcrypt, Swagger |
+| Frontend | Angular 20, Standalone Components, Signals, Reactive Forms, TailwindCSS |
+| Testes | Jest no backend, Vitest/Angular no frontend |
 
-### Pré-requisitos
+## Pre-requisitos
 
-- Node.js >= 18
-- pnpm >= 9 (Gerenciador de pacotes utilizado no monorepo)
+- Node.js 18 ou superior
+- pnpm 10.x ou superior
+- Git
 
-### Instalação e Execução
+No Windows, caso o PowerShell bloqueie scripts, use `pnpm.cmd` nos comandos.
 
-Como este projeto utiliza **Turborepo** e **pnpm workspaces**, os comandos devem ser executados na raiz do projeto.
+## Configuracao
+
+1. Instale as dependencias na raiz:
 
 ```bash
-# 1. Instalar dependências em todos os pacotes
 pnpm install
-
-# (Nota para usuários do Windows: se encontrar erro de restrição de script, utilize pnpm.cmd install)
-
-# 2. Iniciar ambas as aplicações (Frontend e Backend) em modo de desenvolvimento
-pnpm run dev
-# (No Windows utilize: pnpm.cmd run dev)
-
-# 3. Acessos:
-# Frontend Angular: http://localhost:4200
-# API NestJS: http://localhost:3000
-# Swagger API Docs: http://localhost:3000/api
 ```
 
-> Na primeira execução, o banco SQLite é criado automaticamente na raiz do backend (`apps/backend/data/database.sqlite`)
-> e um **seed** popula o banco com um usuário **Administrador**, além de estufas e ciclos de cultivo para demonstração.
+2. Confira as variaveis documentadas em `.env.example`:
 
-**Credenciais do Administrador Padrão:**
-- **Email:** admin@floratech.com
-- **Senha:** Admin@123
+```env
+PORT=3000
+JWT_SECRET=your-super-secret-key-here
+JWT_EXPIRES_IN=60m
+ADMIN_EMAIL=admin@floratech.com
+ADMIN_PASSWORD=Admin@123
+ADMIN_NAME=Administrador
+```
 
-### Executar Testes Unitários
+O backend le o arquivo `.env` dentro de `apps/backend`. Para desenvolvimento local, use os mesmos valores do `.env.example` da raiz em `apps/backend/.env`.
+
+## Como Executar
+
+Execute tudo pela raiz do monorepo:
 
 ```bash
-# Rodar todos os testes
-npm test
-
-# Com cobertura
-npm run test:cov
-
-# Modo watch
-npm run test:watch
+pnpm dev
 ```
 
----
+No Windows:
 
-## 📚 Documentação da API (Swagger)
-
-Após iniciar o servidor, acesse: **http://localhost:3000/api**
-
-O Swagger lista e permite testar todos os endpoints interativamente.
-
----
-
-## 🗄️ Banco de Dados
-
-- **Driver:** SQLite (via `better-sqlite3`)
-- **Arquivo:** `./data/database.sqlite`
-- **Modo:** `synchronize: true` _(uso exclusivamente acadêmico — em produção usar migrations)_
-
----
-
-## 📦 Endpoints Principais
-
-### Estufas (`/estufas`)
-
-| Método   | Rota                  | Descrição                                                  |
-| -------- | --------------------- | ---------------------------------------------------------- |
-| `GET`    | `/estufas`            | Lista todas as estufas                                     |
-| `GET`    | `/estufas/:id`        | Busca estufa por ID                                        |
-| `GET`    | `/estufas/:id/ciclos` | Busca estufa com todos os ciclos de cultivo (relation 1:N) |
-| `POST`   | `/estufas`            | Cria nova estufa                                           |
-| `PUT`    | `/estufas/:id`        | Atualiza estufa existente                                  |
-| `DELETE` | `/estufas/:id`        | Remove estufa                                              |
-
-### Ciclos de Cultivo (`/ciclos-cultivo`)
-
-| Método   | Rota                               | Descrição                             |
-| -------- | ---------------------------------- | ------------------------------------- |
-| `GET`    | `/ciclos-cultivo`                  | Lista todos os ciclos de cultivo      |
-| `GET`    | `/ciclos-cultivo/:id`              | Busca ciclo por ID                    |
-| `GET`    | `/ciclos-cultivo/estufa/:estufaId` | Lista ciclos de uma estufa específica |
-| `POST`   | `/ciclos-cultivo`                  | Cria novo ciclo de cultivo            |
-| `PUT`    | `/ciclos-cultivo/:id`              | Atualiza ciclo existente              |
-| `DELETE` | `/ciclos-cultivo/:id`              | Remove ciclo                          |
-
----
-
-## ✅ Validações de Negócio Implementadas (7+)
-
-Todas as validações estão **exclusivamente na camada de Service** (Application Layer):
-
-| #   | Validação                                                                 | Exceção               | Entidade     |
-| --- | ------------------------------------------------------------------------- | --------------------- | ------------ |
-| 1   | Todos os campos obrigatórios devem ser preenchidos                        | `BadRequestException` | Ambas        |
-| 2   | `dataInauguracao` não pode ser uma data futura                            | `BadRequestException` | Estufa       |
-| 3   | `estufaId` deve referenciar uma estufa **existente e ativa**              | `NotFoundException`   | CicloCultivo |
-| 4   | `areaM2` deve ser ≥ 20 m²                                                 | `BadRequestException` | Estufa       |
-| 5   | `rendimentoKg` não pode exceder `areaM2 × 8`                              | `BadRequestException` | CicloCultivo |
-| 6   | Se `colhida = true`, `rendimentoKg` deve ser > 0                          | `BadRequestException` | CicloCultivo |
-| 7   | `dataInicio` do ciclo não pode ser anterior à `dataInauguracao` da estufa | `BadRequestException` | CicloCultivo |
-| +   | `rendimentoKg` não pode ser negativo                                      | `BadRequestException` | CicloCultivo |
-
----
-
-## 🏗️ Arquitetura Hexagonal
-
-```
-src/
-├── shared/
-│   ├── database/         ← Configuração TypeORM + DatabaseModule + Seed
-│   └── filters/          ← AllExceptionsFilter (filtro global)
-│
-├── estufas/
-│   ├── domain/           ← Interfaces de domínio (sem ORM, sem HTTP)
-│   │   └── estufa.domain.ts
-│   ├── application/      ← Regras de negócio + PORT (interface do repositório)
-│   │   ├── ports/
-│   │   │   └── estufa-repository.port.ts
-│   │   └── estufa.service.ts
-│   ├── infrastructure/   ← Adapter de persistência (TypeORM)
-│   │   └── persistence/typeorm/
-│   │       ├── estufa.orm-entity.ts
-│   │       └── estufa.typeorm-repository.ts
-│   └── presentation/     ← Controller + DTOs (HTTP)
-│       ├── controllers/
-│       │   └── estufa.controller.ts
-│       └── dtos/
-│           └── estufa.dto.ts
-│
-└── ciclos-cultivo/       ← Mesma estrutura hexagonal
+```bash
+pnpm.cmd run dev
 ```
 
-### Responsabilidades por Camada
+Acessos principais:
 
-| Camada              | Classe     | Responsabilidade                            |
-| ------------------- | ---------- | ------------------------------------------- |
-| `presentation`      | Controller | Recebe HTTP, valida DTOs, delega ao Service |
-| `application`       | Service    | **Todas as regras de negócio**; injeta PORT |
-| `application/ports` | Interface  | Contrato do repositório (PORT)              |
-| `infrastructure`    | Repository | Implementa PORT; acessa TypeORM/SQLite      |
-| `domain`            | Interface  | Modelo de domínio puro (sem ORM)            |
+| Servico | URL |
+| --- | --- |
+| Frontend Angular | http://localhost:4200 |
+| Backend NestJS | http://localhost:3000 |
+| Swagger | http://localhost:3000/api |
 
----
+O comando `pnpm dev` sobe backend e frontend em paralelo via Turborepo.
 
-## 🧪 Testes Unitários
+## Credenciais de Administrador
 
-- **64 testes** cobrindo todos os casos de sucesso e erro
-- Repositórios **mockados** (sem acesso ao banco)
-- Cobertura total das 7+ validações de negócio
+Na primeira execucao, o seed cria um usuario administrador ativo:
 
+| Campo | Valor |
+| --- | --- |
+| Email | `admin@floratech.com` |
+| Senha | `Admin@123` |
+
+Novos usuarios cadastrados pelo frontend entram com `ativo = false` e precisam ser aprovados pelo administrador em `/admin/users`.
+
+## Funcionalidades
+
+- Cadastro de usuario com conta pendente de ativacao.
+- Login com JWT.
+- Senha armazenada com hash bcrypt.
+- Rotas de CRUD protegidas por `JwtAuthGuard`.
+- Rotas administrativas protegidas por perfil `admin`.
+- Dashboard protegido com nome do usuario logado e logout.
+- CRUD completo de Estufas.
+- CRUD completo de Ciclos de Cultivo com selecao da Estufa por dropdown.
+- Listagem de usuarios para administrador.
+- Ativacao e desativacao de usuarios.
+- Interceptor HTTP para envio automatico do Bearer Token.
+- Tratamento de sessao expirada ao receber `401`.
+- Exibicao das mensagens de erro retornadas pelo backend nos formularios e nas acoes.
+- Modal de confirmacao para exclusao nas listagens.
+
+## Rotas do Frontend
+
+| Rota | Protecao | Descricao |
+| --- | --- | --- |
+| `/login` | Publica | Login com email e senha |
+| `/register` | Publica | Cadastro de nova conta |
+| `/dashboard` | Autenticada | Pagina inicial protegida |
+| `/estufas` | Autenticada | Listagem da entidade pai |
+| `/estufas/nova` | Autenticada | Cadastro de estufa |
+| `/estufas/editar/:id` | Autenticada | Edicao de estufa |
+| `/ciclos` | Autenticada | Listagem da entidade filha |
+| `/ciclos/novo` | Autenticada | Cadastro de ciclo |
+| `/ciclos/editar/:id` | Autenticada | Edicao de ciclo |
+| `/admin/users` | Admin | Gestao de usuarios |
+
+## Endpoints da API
+
+### Autenticacao
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| `POST` | `/auth/register` | Cadastra usuario inativo |
+| `POST` | `/auth/login` | Autentica usuario ativo e retorna JWT |
+
+Exemplo de login:
+
+```json
+{
+  "email": "admin@floratech.com",
+  "senha": "Admin@123"
+}
 ```
-Test Suites: 3 passed, 3 total
-Tests:       64 passed, 64 total
+
+### Usuarios
+
+Rotas protegidas por JWT e perfil administrador.
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| `GET` | `/users` | Lista usuarios |
+| `PATCH` | `/users/:id/activate` | Ativa ou desativa usuario |
+
+Exemplo de ativacao:
+
+```json
+{
+  "ativo": true
+}
 ```
 
----
+### Estufas
 
-## 🛠️ Tecnologias Utilizadas
+Rotas protegidas por JWT.
 
-| Tecnologia        | Versão    | Uso                     |
-| ----------------- | --------- | ----------------------- |
-| NestJS            | ^11       | Framework principal     |
-| TypeORM           | ^0.3      | ORM para banco de dados |
-| better-sqlite3    | ^12       | Driver SQLite           |
-| class-validator   | ^0.14     | Validação de DTOs       |
-| class-transformer | ^0.5      | Transformação de dados  |
-| @nestjs/swagger   | ^11       | Documentação automática |
-| Jest + ts-jest    | ^30 / ^29 | Testes unitários        |
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| `GET` | `/estufas` | Lista estufas |
+| `GET` | `/estufas/:id` | Busca estufa por ID |
+| `GET` | `/estufas/:id/ciclos` | Busca estufa com ciclos relacionados |
+| `POST` | `/estufas` | Cria estufa |
+| `PUT` | `/estufas/:id` | Atualiza estufa |
+| `DELETE` | `/estufas/:id` | Remove estufa |
 
----
+Exemplo de criacao:
 
-## 📋 Divisão de Tarefas (Git)
+```json
+{
+  "nome": "Estufa A-1",
+  "dataInauguracao": "2024-01-15",
+  "ativa": true,
+  "areaM2": 120
+}
+```
 
-| Feature Branch                   | Funcionalidade                            | Responsável |
-| -------------------------------- | ----------------------------------------- | ----------- |
-| `feature/estufa-crud`            | CRUD Estufa + validações 1, 2, 4          | Membro A    |
-| `feature/ciclo-cultivo-crud`     | CRUD CicloCultivo + validações 3, 5, 6, 7 | Membro B    |
-| `feature/hexagonal-architecture` | Estrutura hexagonal + ports/adapters      | Membro A    |
-| `feature/swagger-docs`           | Configuração Swagger + decorators         | Membro B    |
-| `feature/exception-filter`       | AllExceptionsFilter global                | Membro A    |
-| `feature/unit-tests`             | Testes unitários (64 testes)              | Ambos       |
+### Ciclos de Cultivo
 
----
+Rotas protegidas por JWT.
 
-## ⚠️ Notas Importantes
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| `GET` | `/ciclos-cultivo` | Lista ciclos |
+| `GET` | `/ciclos-cultivo/:id` | Busca ciclo por ID |
+| `GET` | `/ciclos-cultivo/estufa/:estufaId` | Lista ciclos de uma estufa |
+| `POST` | `/ciclos-cultivo` | Cria ciclo |
+| `PUT` | `/ciclos-cultivo/:id` | Atualiza ciclo |
+| `DELETE` | `/ciclos-cultivo/:id` | Remove ciclo |
 
-- `synchronize: true` está ativo **apenas para fins acadêmicos**. Em produção, utilize `migrations`.
-- O arquivo SQLite é criado automaticamente. Não é necessário configurar banco de dados externo.
-- O seed de dados roda automaticamente na **primeira inicialização** (banco vazio).
+Exemplo de criacao:
+
+```json
+{
+  "variedadePlanta": "Alface Crespa",
+  "dataInicio": "2024-02-01",
+  "colhida": false,
+  "rendimentoKg": 0,
+  "estufaId": 1
+}
+```
+
+## Formato de Erro
+
+O backend usa um filtro global de excecoes para padronizar respostas:
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "Erro de validacao nos dados enviados.",
+  "errors": {
+    "areaM2": ["A area deve ser de pelo menos 20 m2."]
+  },
+  "timestamp": "2026-06-20T22:00:00.000Z",
+  "path": "/estufas"
+}
+```
+
+O frontend usa o campo `message` como fonte principal para alertas e usa `errors` para exibir mensagens ao lado dos campos dos formularios.
+
+## Regras de Negocio
+
+As validacoes de dominio permanecem no backend, na camada de service:
+
+| Regra | Entidade |
+| --- | --- |
+| Campos obrigatorios devem ser preenchidos | Estufa e Ciclo |
+| Data de inauguracao da estufa nao pode ser futura | Estufa |
+| Area da estufa deve ser de pelo menos 20 m2 | Estufa |
+| Ciclo deve estar vinculado a estufa existente e ativa | Ciclo |
+| Rendimento nao pode ser negativo | Ciclo |
+| Rendimento nao pode exceder `areaM2 * 8` | Ciclo |
+| Se `colhida = true`, rendimento deve ser maior que 0 | Ciclo |
+| Data de inicio do ciclo nao pode ser anterior a inauguracao da estufa | Ciclo |
+
+## Arquitetura do Backend
+
+O backend segue organizacao inspirada em Arquitetura Hexagonal:
+
+```text
+apps/backend/src/
+|-- auth/
+|   |-- application/
+|   |-- domain/
+|   |-- infrastructure/
+|   `-- presentation/
+|-- estufas/
+|   |-- application/
+|   |-- domain/
+|   |-- infrastructure/
+|   `-- presentation/
+|-- ciclos-cultivo/
+|   |-- application/
+|   |-- domain/
+|   |-- infrastructure/
+|   `-- presentation/
+`-- shared/
+    |-- database/
+    `-- filters/
+```
+
+## Qualidade e Testes
+
+Rodar build:
+
+```bash
+pnpm build
+```
+
+Rodar testes:
+
+```bash
+pnpm test
+```
+
+No Windows:
+
+```bash
+pnpm.cmd run build
+pnpm.cmd run test
+```
+
+Resultado validado nesta entrega:
+
+| Comando | Resultado |
+| --- | --- |
+| `pnpm.cmd run build` | Passou |
+| `pnpm.cmd run test` | Passou |
+| Backend Jest | 64 testes passando |
+| Frontend Angular/Vitest | 2 testes passando |
+
+## Git e Entrega
+
+- Repositorio unico em monorepo.
+- Branch principal: `main`.
+- Historico com mais de 10 commits logicos em Conventional Commits.
+- Projeto enviado para: https://github.com/LucasCoSi/flora-tech--va2
+
+## Divisao de Tarefas
+
+| Integrante | Atividades |
+| --- | --- |
+| Marcelo Henrique | Modelagem e CRUD de Estufas, regras de negocio, testes do backend |
+| Lucas Costa | Modelagem e CRUD de Ciclos de Cultivo, autenticacao, frontend Angular, integracao com API |
+
+## Observacoes
+
+- O token JWT fica em memoria no frontend, sem uso de `localStorage`.
+- O banco e criado automaticamente em desenvolvimento.
+- `synchronize: true` esta ativo apenas para fins academicos. Em producao, o correto seria usar migrations.
+- Arquivos `.env` reais nao devem ser enviados ao Git.
