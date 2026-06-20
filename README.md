@@ -321,13 +321,6 @@ Resultado validado nesta entrega:
 - Historico com mais de 10 commits logicos em Conventional Commits.
 - Projeto enviado para: https://github.com/LucasCoSi/flora-tech--va2
 
-## Divisao de Tarefas
-
-| Integrante | Atividades |
-| --- | --- |
-| Marcelo Henrique | Modelagem e CRUD de Estufas, regras de negocio, testes do backend |
-| Lucas Costa | Modelagem e CRUD de Ciclos de Cultivo, autenticacao, frontend Angular, integracao com API |
-
 ## Observacoes
 
 - O token JWT fica em memoria no frontend, sem uso de `localStorage`.
