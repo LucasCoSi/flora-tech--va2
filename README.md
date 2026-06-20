@@ -4,10 +4,10 @@ Aplicacao full stack em monorepo para gerenciamento de estufas hidroponicas e ci
 
 ## Integrantes
 
-| Nome | Responsabilidades principais |
-| --- | --- |
-| Marcelo Henrique | CRUD de Estufas, regras de negocio, backend e testes |
-| Lucas Costa | CRUD de Ciclos de Cultivo, frontend, autenticacao e integracao |
+| Nome |
+| --- |
+| Marcelo Henrique |
+| Lucas Costa |
 
 ## Tema
 
