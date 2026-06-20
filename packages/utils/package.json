@@ -1,0 +1,15 @@
+{
+  "name": "@flora-tech/utils",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "echo 'No build step for utils'",
+    "lint": "echo 'No lint step for utils'"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

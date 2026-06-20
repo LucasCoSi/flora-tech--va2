@@ -1,0 +1,19 @@
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
+/**
+ * Guard para rotas protegidas.
+ * Se não houver token, redireciona para a tela de login.
+ */
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isAuthenticated()) {
+    return true;
+  }
+
+  // Redirecionar para login com a URL original para redirecionar depois (opcional)
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+};

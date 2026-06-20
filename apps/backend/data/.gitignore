@@ -1,0 +1,3 @@
+# Pasta onde o banco de dados SQLite será criado em runtime
+# O arquivo database.sqlite é gerado automaticamente pelo TypeORM
+*.sqlite
