@@ -45,7 +45,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const res = exceptionResponse as Record<string, unknown>;
         
         // Tratamento especial para erros do ValidationPipe
-        if (Array.isArray(res.message)) {
+        if (
+          res.errors &&
+          typeof res.errors === 'object' &&
+          !Array.isArray(res.errors)
+        ) {
+          message = (res.message as string) ?? 'Erro de validação nos dados enviados.';
+          errors = res.errors as Record<string, string[]>;
+        } else if (Array.isArray(res.message)) {
           message = 'Erro de validação nos dados enviados.';
           errors = {};
           // O ValidationPipe retorna array de strings "campo de erro".

@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  ValidationError,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './shared/filters/all-exceptions.filter';
@@ -21,6 +25,27 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        const errors = validationErrors.reduce<Record<string, string[]>>(
+          (acc, error) => {
+            const messages = error.constraints
+              ? Object.values(error.constraints)
+              : [];
+
+            if (messages.length > 0) {
+              acc[error.property] = messages;
+            }
+
+            return acc;
+          },
+          {},
+        );
+
+        return new BadRequestException({
+          message: 'Erro de validação nos dados enviados.',
+          errors,
+        });
+      },
     }),
   );
 
