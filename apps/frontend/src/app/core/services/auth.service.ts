@@ -55,8 +55,12 @@ export class AuthService {
    * Realiza o logout limpando o estado em memória e redirecionando.
    */
   logout(): void {
+    this.clearSession();
+    this.router.navigate(['/login']);
+  }
+
+  clearSession(): void {
     this._token.set(null);
     this._user.set(null);
-    this.router.navigate(['/login']);
   }
 }
