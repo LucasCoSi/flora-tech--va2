@@ -26,23 +26,34 @@ O sistema permite o gerenciamento completo de estufas e seus ciclos de cultivo, 
 ### Pré-requisitos
 
 - Node.js >= 18
-- npm >= 9
+- pnpm >= 9 (Gerenciador de pacotes utilizado no monorepo)
 
 ### Instalação e Execução
 
+Como este projeto utiliza **Turborepo** e **pnpm workspaces**, os comandos devem ser executados na raiz do projeto.
+
 ```bash
-# 1. Instalar dependências
-npm install
+# 1. Instalar dependências em todos os pacotes
+pnpm install
 
-# 2. Iniciar em modo desenvolvimento (hot-reload)
-npm run start:dev
+# (Nota para usuários do Windows: se encontrar erro de restrição de script, utilize pnpm.cmd install)
 
-# 3. Acessar o Swagger
-# http://localhost:3000/api
+# 2. Iniciar ambas as aplicações (Frontend e Backend) em modo de desenvolvimento
+pnpm run dev
+# (No Windows utilize: pnpm.cmd run dev)
+
+# 3. Acessos:
+# Frontend Angular: http://localhost:4200
+# API NestJS: http://localhost:3000
+# Swagger API Docs: http://localhost:3000/api
 ```
 
-> Na primeira execução, o banco SQLite é criado automaticamente em `/data/database.sqlite`
-> e um **seed** popula o banco com 3 estufas e 4 ciclos de cultivo para demonstração.
+> Na primeira execução, o banco SQLite é criado automaticamente na raiz do backend (`apps/backend/data/database.sqlite`)
+> e um **seed** popula o banco com um usuário **Administrador**, além de estufas e ciclos de cultivo para demonstração.
+
+**Credenciais do Administrador Padrão:**
+- **Email:** admin@floratech.com
+- **Senha:** Admin@123
 
 ### Executar Testes Unitários
 

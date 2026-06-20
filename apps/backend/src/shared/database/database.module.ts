@@ -20,8 +20,9 @@ if (!fs.existsSync(dataDir)) {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: () => ({
-        type: 'better-sqlite3' as const,
-        database: join(process.cwd(), 'data', 'database.sqlite'),
+        type: 'sqljs' as const,
+        location: join(process.cwd(), 'data', 'database.sqlite'),
+        autoSave: true,
         entities: [EstufaOrmEntity, CicloCultivoOrmEntity, UserOrmEntity],
         /**
          * ATENÇÃO — synchronize: true

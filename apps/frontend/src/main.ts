@@ -1,6 +1,12 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { AppComponent } from './app/app.component';
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+console.log('Bootstrapping Angular...');
+
+bootstrapApplication(AppComponent, appConfig)
+  .then(() => console.log('Angular Bootstrapped Successfully!'))
+  .catch((err) => {
+    console.error('Angular Bootstrap Error:', err);
+    alert('Erro ao inicializar o Angular: ' + err.message);
+  });
