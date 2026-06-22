@@ -192,7 +192,11 @@ export class CicloFormComponent implements OnInit {
     };
 
     if (!payload.colhida) {
-      delete (payload as any).rendimentoKg;
+      payload.rendimentoKg = 0;
+    }
+
+    if (this.isEdit) {
+      delete (payload as any).estufaId;
     }
 
     const request = this.isEdit

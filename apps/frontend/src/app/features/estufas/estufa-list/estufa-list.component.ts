@@ -58,7 +58,7 @@ import { ErrorService } from '../../../core/services/error.service';
 
                 <h3 class="text-xl font-bold text-slate-900 mb-1 line-clamp-1" [title]="estufa.nome">{{ estufa.nome }}</h3>
                 <p class="text-sm text-slate-500 mb-4">{{ estufa.areaM2 }} m2</p>
-                <p class="text-xs text-slate-400">Inaugurada em {{ estufa.dataInauguracao | date:'dd/MM/yyyy' }}</p>
+                <p class="text-xs text-slate-400">Inaugurada em {{ estufa.dataInauguracao | date:'dd/MM/yyyy':'UTC' }}</p>
               </div>
             </div>
           }

@@ -57,7 +57,7 @@ import { ErrorService } from '../../../core/services/error.service';
                       <div class="text-sm text-slate-500">{{ getEstufaName(ciclo.estufaId) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-slate-500">{{ ciclo.dataInicio | date:'dd/MM/yyyy' }}</div>
+                      <div class="text-sm text-slate-500">{{ ciclo.dataInicio | date:'dd/MM/yyyy':'UTC' }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" [ngClass]="ciclo.colhida ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'">
